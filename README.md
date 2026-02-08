@@ -1,4 +1,3 @@
-```markdown
 <div align="center">
 
 <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=50&pause=1000&color=ED1C24&center=true&vCenter=true&width=600&lines=ROCm+BRIDGE;THE+PORTABILITY+ENGINE;AMD+SLINGSHOT+2026" alt="Typing SVG" />
@@ -14,6 +13,9 @@
 </p>
 
 <br/>
+
+<img src="assets/demo.gif" alt="System Dashboard Demo" width="800px" style="border-radius: 10px; border: 2px solid #333; box-shadow: 0 0 20px rgba(237, 28, 36, 0.4);">
+
 <br/><br/>
 
 > ❝ **Porting isn't about syntax. It's about architecture.** We don't just find-and-replace; we re-engineer CUDA Warps into AMD Wavefronts. ❞
@@ -30,7 +32,7 @@
       <h3 align="left">The Core Pipeline</h3>
       The system operates on a 4-stage <b>Static-Dynamic</b> analysis loop:
       <br/><br/>
-      1. <b>Injest:</b> Parses C++ AST to find <code>blockDim.x == 32</code> patterns.
+      1. <b>Ingest:</b> Parses C++ AST to find <code>blockDim.x == 32</code> patterns.
       <br/>
       2. <b>Profile:</b> Runs <code>rocprof</code> simulation to capture hardware stalls.
       <br/>
@@ -120,3 +122,6 @@ To show the **"Before & After"** contrast to judges, use the specific filenames 
 
 </div>
 
+```
+
+```
