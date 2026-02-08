@@ -96,7 +96,3 @@ streamlit run app/main.py
 
 This project is developed for the **AMD Slingshot Hackathon** under the MIT License.
 
-```
-**Would you like me to generate that `.gitignore` file for you as well?**
-
-```
