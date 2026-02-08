@@ -1,20 +1,23 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=50&pause=1000&color=ED1C24&center=true&vCenter=true&width=600&lines=ROCm+BRIDGE;THE+PORTABILITY+ENGINE;AMD+SLINGSHOT+2026" alt="Typing SVG" />
+<a href="https://git.io/typing-svg">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=60&pause=1000&color=ED1C24&center=true&vCenter=true&width=900&height=100&lines=ROCm+BRIDGE;THE+PORTABILITY+ENGINE;AMD+SLINGSHOT+2026" alt="Typing SVG" />
+</a>
 
-<h3 style="font-family: 'Courier New', monospace;">AUTOMATED CUDA-TO-HIP INTELLIGENCE SYSTEM</h3>
+<a href="https://git.io/typing-svg">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=25&pause=1000&color=00FF41&center=true&vCenter=true&width=600&lines=SYSTEM+STATUS:+ONLINE;AST+PARSER:+ACTIVE;PROFILER:+READY;TARGET:+MI300X" alt="Typing SVG" />
+</a>
 
 <p>
-<img src="https://img.shields.io/badge/ARCHITECTURE-CDNA%203-red?style=for-the-badge&logo=amd&logoColor=white" />
-<img src="https://img.shields.io/badge/STACK-PYTHON%203.10-blue?style=for-the-badge&logo=python&logoColor=white" />
-<img src="https://img.shields.io/badge/UI-STREAMLIT-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" />
-<img src="https://img.shields.io/badge/LICENSE-MIT-green?style=for-the-badge" />
-<img src="https://img.shields.io/badge/STATUS-OPERATIONAL-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/ARCHITECTURE-CDNA%203-red?style=for-the-badge&logo=amd&logoColor=white" />
+  <img src="https://img.shields.io/badge/STACK-PYTHON%203.10-blue?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/UI-STREAMLIT-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" />
+  <img src="https://img.shields.io/badge/STATUS-OPERATIONAL-orange?style=for-the-badge" />
 </p>
 
 <br/>
 
-<img src="assets/demo.gif" alt="System Dashboard Demo" width="800px" style="border-radius: 10px; border: 2px solid #333; box-shadow: 0 0 20px rgba(237, 28, 36, 0.4);">
+<img src="assets/demo.gif" alt="System Dashboard Demo" width="800px" style="border-radius: 10px; border: 2px solid #333; box-shadow: 0 0 30px rgba(237, 28, 36, 0.5);">
 
 <br/><br/>
 
@@ -79,24 +82,19 @@
 
 ## 🚀 Deployment Protocol
 
-### 1. Clone Vector
+<div align="center">
+
+<a href="https://git.io/typing-svg">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Console&size=20&pause=1000&color=FFFFFF&background=000000&center=true&vCenter=true&width=600&height=100&lines=git+clone+rocm-bridge;pip+install+-r+requirements.txt;streamlit+run+app%2Fmain.py;>_ SYSTEM+LAUNCHED" alt="Terminal Typing" />
+</a>
+
+</div>
+
 ```bash
+# Standard Execution
 git clone [https://github.com/Team7SENSITIVE/rocm-bridge.git](https://github.com/Team7SENSITIVE/rocm-bridge.git)
 cd rocm-bridge
-
-```
-
-### 2. Inject Dependencies
-
-```bash
 pip install -r requirements.txt
-pip install streamlit-lottie  # Required for UI animations
-
-```
-
-### 3. Initialize System
-
-```bash
 streamlit run app/main.py
 
 ```
