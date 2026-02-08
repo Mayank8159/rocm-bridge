@@ -1,7 +1,9 @@
-from http.server import BaseHTTPRequestHandler
 import os
-import sys
+from flask import Flask # or FastAPI
 
-# Directing the request to start the streamlit process
-def handler(request):
-    os.system("streamlit run app/main.py --server.port 8080")
+app = Flask(__name__)
+
+if __name__ == "__main__":
+    # Render provides the port via the PORT env var
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
