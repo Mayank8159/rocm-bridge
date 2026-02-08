@@ -4,17 +4,18 @@
 __global__ void matrixMul(float* A, float* B, float* C, int N) {
     int tx = threadIdx.x;
     
-    // BAD: Hardcoded 32 assumes NVIDIA Warp
+    // BAD: Hardcoded 32 assumes NVIDIA Warp size
+    // On AMD, this will cause divergence or be skipped entirely (Wavefront is 64)
     if (blockDim.x == 32) {
         // Warp-specific logic
     }
     
-    // BAD: NVIDIA Intrinsic
+    // BAD: NVIDIA Intrinsic (__shfl_sync is not portable)
     int val = __shfl_sync(0xffffffff, tx, 0);
 }
 
 int main() {
-    // BAD: Launching with 32 threads
+    // BAD: Launching with 32x32 block is suboptimal for AMD (Wave64 preferred)
     dim3 block(32, 32); 
     matrixMul<<<1, block>>>(NULL, NULL, NULL, 1024);
     return 0;
