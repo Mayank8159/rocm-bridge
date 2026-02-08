@@ -5,10 +5,10 @@
 #define WAVEFRONT_SIZE 64 
 
 __global__ void matrixMul(float* A, float* B, float* C, int N) {
-    int tx = hipThreadIdx_x;
+    int tx = threadIdx.x;
     
     // GOOD: Logic aligns with AMD hardware execution width
-    if (hipBlockDim_x == WAVEFRONT_SIZE) {
+    if (blockDim.x == WAVEFRONT_SIZE) {
         // Optimized wavefront logic
     }
     
