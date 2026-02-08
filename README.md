@@ -1,4 +1,4 @@
-```
+```markdown
 <div align="center">
 
 <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=50&pause=1000&color=ED1C24&center=true&vCenter=true&width=600&lines=ROCm+BRIDGE;THE+PORTABILITY+ENGINE;AMD+SLINGSHOT+2026" alt="Typing SVG" />
