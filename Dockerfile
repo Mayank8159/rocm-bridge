@@ -1,24 +1,31 @@
-# Use a Python image that is compatible with C++ tools
-FROM python:3.11-slim-bookworm
+# 1. Use a robust Python base
+FROM python:3.12-slim-bookworm
 
-# Install system dependencies (Clang and build tools)
+# 2. Install Clang 17 (Required for your ROCm Bridge)
 RUN apt-get update && apt-get install -y \
-    clang \
-    build-essential \
-    libstdc++-12-dev \
-    && rm -rf /var/lib/apt/lists/*
+    wget gnupg lsb-release software-properties-common build-essential \
+    && wget https://apt.llvm.org/llvm.sh \
+    && chmod +x llvm.sh \
+    && ./llvm.sh 17 \
+    && rm llvm.sh \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# 3. Set environment variables for the compiler
+ENV CC=clang-17
+ENV CXX=clang++-17
+
+# 4. Set the working directory (Streamlit prefers not running from /)
 WORKDIR /app
 
-# Install Python requirements
+# 5. Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy your code
+# 6. Copy your application code
 COPY . .
 
-# Expose the port Render will use
+# 7. Render uses port 10000 by default
 EXPOSE 10000
 
-# Start your application (assuming it's a Flask or FastAPI bridge)
-CMD ["python", "api/index.py"]
+# 8. Start Streamlit (Update 'api/index.py' if you rename the file!)
+CMD ["streamlit", "run", "api/index.py", "--server.port=10000", "--server.address=0.0.0.0"]
