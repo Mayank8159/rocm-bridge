@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: rocm-bridge
+    env: docker
+    plan: free
+    region: ohio
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 10000
+    
+  # The Keep-Alive Pinger
+  - type: cron
+    name: keep-alive
+    plan: free
+    schedule: "*/10 * * * *"
+    script: "curl https://rocm-bridge.onrender.com" # Change this to your Render URL after deploy
