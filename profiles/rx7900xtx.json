@@ -1,0 +1,13 @@
+{
+    "name": "AMD Radeon RX 7900 XTX",
+    "arch": "RDNA 3",
+    "wavefront_size": 32,
+    "peak_gflops": 123000.0,
+    "memory_bandwidth": 960.0,
+    "compute_units": 96,
+    "lds_banks": 32,
+    "lds_bank_width": 4,
+    "global_memory_size_gb": 24,
+    "device_id": "gfx1100",
+    "is_simulated": true
+}

@@ -1,24 +1,55 @@
 #include <hip/hip_runtime.h>
 #include <stdio.h>
 
-// GOOD: Optimized for AMD CDNA Architecture (Wavefront 64)
-#define WAVEFRONT_SIZE 64 
+// ------------------------------------------------------------------
+// ROCm Bridge - Optimized Demo Test Case
+// This file is already optimized for AMD CDNA/RDNA architectures.
+// ------------------------------------------------------------------
+
+#define WAVEFRONT_SIZE 64
 
 __global__ void matrixMul(float* A, float* B, float* C, int N) {
     int tx = threadIdx.x;
-    
-    // GOOD: Logic aligns with AMD hardware execution width
+    int ty = threadIdx.y;
+    int bx = blockIdx.x;
+    int by = blockIdx.y;
+
+    // GOOD: Wavefront-aware logic (64 threads for CDNA)
     if (blockDim.x == WAVEFRONT_SIZE) {
-        // Optimized wavefront logic
+        int lane = tx % WAVEFRONT_SIZE;
     }
-    
-    // GOOD: Portable HIP Intrinsic (Works on both AMD & NVIDIA)
-    int val = __shfl(tx, 0); 
+
+    // GOOD: Portable HIP intrinsic
+    int val = __shfl(tx, 0);
+
+    // GOOD: Padded shared memory to avoid bank conflicts
+    __shared__ float sharedData[32][33];  // 33 instead of 32
+    sharedData[ty][tx] = A[by * 32 + ty][bx * 32 + tx];
+    __syncthreads();
+
+    int row = by * blockDim.y + ty;
+    int col = bx * blockDim.x + tx;
+
+    if (row < N && col < N) {
+        float sum = 0.0f;
+        for (int k = 0; k < N; ++k) {
+            sum += A[row * N + k] * B[k * N + col];
+        }
+        C[row * N + col] = sum;
+    }
 }
 
 int main() {
-    // GOOD: Launching with 64x16 block aligns perfectly with AMD Compute Units
-    dim3 block(64, 16); 
-    hipLaunchKernelGGL(matrixMul, dim3(1), block, 0, 0, NULL, NULL, NULL, 1024);
+    int N = 1024;
+    
+    // GOOD: 64x16 block aligns with AMD Wavefront 64
+    dim3 block(64, 16);
+    dim3 grid(N/64, N/16);
+
+    printf("Launching MatrixMul with AMD-optimized config...\n");
+    
+    hipLaunchKernelGGL(matrixMul, grid, block, 0, 0, nullptr, nullptr, nullptr, N);
+    
+    hipDeviceSynchronize();
     return 0;
 }

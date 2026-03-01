@@ -1,0 +1,13 @@
+{
+    "name": "AMD Instinct MI250X",
+    "arch": "CDNA 2",
+    "wavefront_size": 64,
+    "peak_gflops": 479000.0,
+    "memory_bandwidth": 3350.0,
+    "compute_units": 220,
+    "lds_banks": 32,
+    "lds_bank_width": 4,
+    "global_memory_size_gb": 128,
+    "device_id": "gfx90a",
+    "is_simulated": true
+}

@@ -1,0 +1,13 @@
+{
+    "name": "AMD Radeon RX 6900 XT",
+    "arch": "RDNA 2",
+    "wavefront_size": 32,
+    "peak_gflops": 51000.0,
+    "memory_bandwidth": 512.0,
+    "compute_units": 80,
+    "lds_banks": 32,
+    "lds_bank_width": 4,
+    "global_memory_size_gb": 16,
+    "device_id": "gfx1030",
+    "is_simulated": true
+}

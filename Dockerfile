@@ -1,35 +1,64 @@
-# 1. Use a robust Python base
-FROM python:3.12-slim-bookworm
+# =============================================================================
+# ROCm Bridge - Production Docker Image
+# =============================================================================
+FROM python:3.11-slim-bookworm
 
-# 2. Install Clang 17 (Required for your ROCm Bridge)
-RUN apt-get update && apt-get install -y \
-    wget gnupg lsb-release software-properties-common build-essential curl \
-    && wget https://apt.llvm.org/llvm.sh \
-    && chmod +x llvm.sh \
-    && ./llvm.sh 17 \
-    && rm llvm.sh \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Prevent Python bytecode caching
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# 3. Set environment variables for the compiler
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    wget \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    clang-17 \
+    libclang-17-dev \
+    llvm-17-dev \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
 ENV CC=clang-17
 ENV CXX=clang++-17
-# IMPORTANT: This allows your Python 'clang' library to find the system library
-ENV LLVM_LIB_PATH=/usr/lib/x86_64-linux-gnu/libclang.so.1
+ENV LLVM_LIB_PATH=/usr/lib/x86_64-linux-gnu/libclang.so.17
+ENV PATH="/usr/lib/llvm-17/bin:${PATH}"
 
-# 4. Set the working directory
+# Set working directory
 WORKDIR /app
 
-# 5. Install Python dependencies
+# Install Python dependencies (before copying code for better caching)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# 6. Copy your application code
-# This copies everything from your local folder into the /app folder in Docker
+# Copy application code
 COPY . .
 
-# 7. Render uses port 10000 by default
+# Create output directories
+RUN mkdir -p /app/output/hip_output \
+    /app/output/patches \
+    /app/output/reports \
+    /app/output/logs \
+    /app/profiles
+
+# Set permissions
+RUN chmod -R 755 /app
+
+# Expose port
 EXPOSE 10000
 
-# 8. Start Streamlit (CORRECTED PATH)
-# Since your file is in 'app/main.py', we target that exactly.
-CMD ["streamlit", "run", "app/main.py", "--server.port=10000", "--server.address=0.0.0.0"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:10000/_stcore/health || exit 1
+
+# Start application
+CMD ["streamlit", "run", "app/main.py", \
+     "--server.port=10000", \
+     "--server.address=0.0.0.0", \
+     "--server.headless=true", \
+     "--browser.gatherUsageStats=false"]

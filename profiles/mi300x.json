@@ -1,0 +1,13 @@
+{
+    "name": "AMD Instinct MI300X",
+    "arch": "CDNA 3",
+    "wavefront_size": 64,
+    "peak_gflops": 1300000.0,
+    "memory_bandwidth": 5300.0,
+    "compute_units": 304,
+    "lds_banks": 32,
+    "lds_bank_width": 4,
+    "global_memory_size_gb": 192,
+    "device_id": "gfx942",
+    "is_simulated": true
+}

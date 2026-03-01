@@ -1,30 +1,37 @@
-#include <hip/hip_runtime.h>
+#include <cuda_runtime.h>
 #include <stdio.h>
 
 // ------------------------------------------------------------------
-// ROCm Bridge - Demo Test Case
-// This file contains intentional "Anti-Patterns" for AMD architectures.
+// ROCm Bridge - Demo Test Case (INTENTIONAL ANTI-PATTERNS)
+// This file contains CUDA code that needs optimization for AMD.
 // ------------------------------------------------------------------
 
 __global__ void matrixMul(float* A, float* B, float* C, int N) {
-    // 1. Thread Index Calculation
     int tx = threadIdx.x;
     int ty = threadIdx.y;
+    int bx = blockIdx.x;
+    int by = blockIdx.y;
 
-    // [ISSUE 1] Hardcoded Warp Size Assumption
-    // NVIDIA Warps are 32 threads. AMD Wavefronts are 64.
-    // This logic will fail or cause divergence on CDNA/RDNA architectures.
+    // [ISSUE 1] Hardcoded Warp Size Assumption (ROCM_001)
+    // NVIDIA Warps = 32 threads. AMD Wavefronts = 64 threads.
+    // This will cause 50% VALU underutilization on CDNA.
     if (blockDim.x == 32) {
-        // ... Warp-specific optimization logic ...
+        int lane = tx % 32;
     }
 
-    // [ISSUE 2] NVIDIA-Specific Intrinsic
-    // __shfl_sync is not portable to HIP. It must be replaced with __shfl().
-    int val = __shfl(tx, 0);
+    // [ISSUE 2] NVIDIA-Specific Intrinsic (ROCM_002)
+    // __shfl_sync does not exist in HIP without modification
+    int val = __shfl_sync(0xFFFFFFFF, tx, 0);
 
-    // Standard Matrix Multiplication Logic (Safe)
-    int row = blockIdx.y * blockDim.y + ty;
-    int col = blockIdx.x * blockDim.x + tx;
+    // [ISSUE 3] Shared Memory Bank Conflict (ROCM_003)
+    // 32-element arrays cause 32-way bank conflicts on AMD LDS
+    __shared__ float sharedData[32][32];
+    sharedData[ty][tx] = A[by * 32 + ty][bx * 32 + tx];
+    __syncthreads();
+
+    // Standard Matrix Multiplication
+    int row = by * blockDim.y + ty;
+    int col = bx * blockDim.x + tx;
 
     if (row < N && col < N) {
         float sum = 0.0f;
@@ -38,16 +45,16 @@ __global__ void matrixMul(float* A, float* B, float* C, int N) {
 int main() {
     int N = 1024;
     
-    // [ISSUE 3] Suboptimal Block Dimensions for AMD
-    // 32x32 = 1024 threads. 
-    // AMD Compute Units prefer Wavefronts of 64 (e.g., 64x16 or 256x1).
-    // Using 32 in X-dimension reinforces the Warp-32 dependency.
-    dim3 block(32, 32); 
+    // [ISSUE 4] Suboptimal Block Dimensions (ROCM_005)
+    // 32x32 = 1024 threads, but X-dimension of 32 wastes CDNA wavefronts
+    dim3 block(32, 32);
     dim3 grid(N/32, N/32);
 
-    printf("Launching MatrixMul Kernel with NVIDIA-optimized configuration...\n");
-    hipLaunchKernelGGL(matrixMul, grid, block, 0, 0, NULL, NULL, NULL, N);
+    printf("Launching MatrixMul with NVIDIA-optimized config...\n");
     
-    hipDeviceSynchronize();
+    // CUDA kernel launch syntax (needs hipify conversion)
+    matrixMul<<<grid, block>>>(nullptr, nullptr, nullptr, N);
+    
+    cudaDeviceSynchronize();
     return 0;
 }
